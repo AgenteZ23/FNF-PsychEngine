@@ -14,7 +14,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@v2
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.2
 
       - name: Install Haxelib Packages
         run: |
@@ -40,18 +40,11 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib run lime setup -y
 
-      - name: Patch HScript for Haxe 4.2.5
+      - name: Patch Engine Bugs for Haxe 4.3.2
+        shell: bash
         run: |
-          python -c "
-          path = 'source/psychlua/HScript.hx'
-          with open(path, 'r', encoding='utf-8') as f:
-              lines = f.readlines()
-          print('Original:', lines[431])
-          lines[431] = lines[431].replace('?.', '.')
-          with open(path, 'w', encoding='utf-8') as f:
-              f.writelines(lines)
-          print('¡Parche aplicado con éxito!')
-          "
+          # Corrige el error "Unknown<0> -> Void" del PlayState limpiando el argumento
+          sed -i 's/onClose.add(function(e)/onClose.add(function()/g' source/states/PlayState.hx || true
 
       - name: Build Game
         run: haxelib run lime build windows -release
