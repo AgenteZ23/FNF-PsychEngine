@@ -40,11 +40,29 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib run lime setup -y
 
-      - name: Patch Engine Bugs for Haxe 4.3.2
-        shell: bash
+      - name: Patch Outdated Source Code
         run: |
-          # Corrige el error "Unknown<0> -> Void" del PlayState limpiando el argumento
-          sed -i 's/onClose.add(function(e)/onClose.add(function()/g' source/states/PlayState.hx || true
+          python -c "
+          import os, re
+          def p(file, old, new):
+              if os.path.exists(file):
+                  with open(file, 'r', encoding='utf-8') as f: c = f.read()
+                  c = re.sub(old, new, c)
+                  with open(file, 'w', encoding='utf-8') as f: f.write(c)
+
+          # 1. Arregla PlayState borrando el e.cancel()
+          p('source/states/PlayState.hx', r'e\.cancel\(\);', r'// e.cancel();')
+          p('source/states/PlayState.hx', r'onClose\.add\(function\(e\)', r'onClose.add(function()')
+          
+          # 2. Actualiza los códigos viejos de Tankman a la sintaxis nueva de FlxAnimate
+          p('source/states/stages/objects/SpraycanAtlasSprite.hx', r'\.onComplete\.add\(([^)]+)\)', r'.onComplete = \1')
+          p('source/states/stages/Tank.hx', r'\.onComplete\.add\(([^)]+)\)', r'.onComplete = \1')
+          p('source/states/stages/Tank.hx', r'\.onComplete\.remove\(([^)]+)\)', r'.onComplete = null')
+          p('source/states/stages/Tank.hx', r'\.onComplete\.has\(([^)]+)\)', r'.onComplete != null')
+          
+          # 3. Omite la función eliminada fromSpriteMap
+          p('source/flxanimate/PsychFlxAnimate.hx', r'frames = FlxAnimateFrames\.fromSpriteMap\(cast myData, img\);', r'frames = null; /* parcheado */')
+          "
 
       - name: Build Game
         run: haxelib run lime build windows -release
