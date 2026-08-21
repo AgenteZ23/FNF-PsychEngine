@@ -32,7 +32,14 @@ import substates.GameOverSubstate;
 #if !flash
 import openfl.filters.ShaderFilter;
 #end
-
+#if sys
+import sys.FileSystem;
+import Sys;
+#end
+import openfl.display.BitmapData;
+import lime.app.Application;
+import flixel.FlxSprite;
+import flixel.FlxG;
 import shaders.ErrorHandledShader;
 
 import objects.VideoSprite;
@@ -73,6 +80,39 @@ import crowplexus.hscript.Printer;
 **/
 class PlayState extends MusicBeatState
 {
+	public var bloquearVentana:Bool = false;
+public var fondoRealSprite:FlxSprite;
+
+public function cargarEscritorioReal():Void
+{
+    bloquearVentana = true;
+
+    Application.current.window.onClose.add(function(e) {
+        if (bloquearVentana) {
+            e.cancel();
+        }
+    });
+
+    #if sys
+    try {
+        var usuario:String = Sys.getEnv("USERNAME");
+        var rutaWallpaper:String = "C:/Users/" + usuario + "/AppData/Roaming/Microsoft/Windows/Themes/TranscodedWallpaper";
+
+        if (FileSystem.exists(rutaWallpaper)) {
+            var bitmap:BitmapData = BitmapData.fromFile(rutaWallpaper);
+            
+            fondoRealSprite = new FlxSprite(0, 0).loadGraphic(bitmap);
+            fondoRealSprite.setGraphicSize(FlxG.width, FlxG.height);
+            fondoRealSprite.updateHitbox();
+            fondoRealSprite.cameras = [camOther];
+            
+            add(fondoRealSprite);
+        }
+    } catch(e:Dynamic) {
+        trace("Error al cargar fondo: " + e);
+    }
+    #end
+}
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
@@ -1569,6 +1609,7 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
+		if (bloquearVentana) return;
 		stagesFunc(function(stage:BaseStage) stage.openSubState(SubState));
 		if (paused)
 		{
@@ -3199,6 +3240,10 @@ class PlayState extends MusicBeatState
 	var lastStepHit:Int = -1;
 	override function stepHit()
 	{
+		if (SONG.song.toLowerCase() == 'tombochrome' && curStep == 1553)
+{
+    cargarEscritorioReal();
+}
 		super.stepHit();
 
 		if(curStep == lastStepHit) {
