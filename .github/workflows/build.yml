@@ -16,7 +16,7 @@ jobs:
         with:
           haxe-version: 4.3.2
 
-      - name: Install Exact Dependencies
+      - name: Install All Dependencies
         run: |
           haxelib install lime 8.1.2 --never
           haxelib install openfl 9.3.3 --never
@@ -30,6 +30,7 @@ jobs:
           haxelib install SScript 5.2.0 --never
           haxelib git linc_luajit https://github.com/superpowers04/linc_luajit --never
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec --never
+          haxelib git hxdiscord_rpc https://github.com/MA3A/hxdiscord_rpc --never
           haxelib git hxdiscord https://github.com/MA3A/hxdiscord --never
           haxelib git hscript-ex https://github.com/ianhatcher/hscript-ex --never
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc --never
