@@ -16,10 +16,23 @@ jobs:
         with:
           haxe-version: 4.3.2
 
-      - name: Install Dependencies
+      - name: Install All Dependencies
         run: |
-          haxelib install hmm
-          haxelib run hmm install
+          haxelib install lime --never
+          haxelib install openfl --never
+          haxelib install flixel --never
+          haxelib install flixel-addons --never
+          haxelib install flixel-tools --never
+          haxelib install flixel-ui --never
+          haxelib install hscript --never
+          haxelib install hscript-iris --never
+          haxelib install tjson --never
+          haxelib install SScript --never
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit --never
+          haxelib git hxCodec https://github.com/polybiusproxy/hxCodec --never
+          haxelib git hxdiscord https://github.com/MA3A/hxdiscord --never
+          haxelib git hscript-ex https://github.com/ianhatcher/hscript-ex --never
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc --never
           haxelib run lime setup -y
 
       - name: Build Game
