@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -29,6 +32,7 @@ jobs:
           haxelib install tjson 1.4.0 --never
           haxelib install SScript 5.2.0 --never
           haxelib install hxdiscord_rpc 1.2.4 --never
+          haxelib install flxanimate --never || true
           haxelib git flxanimate https://github.com/DotNetRetard/flxanimate
           haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
