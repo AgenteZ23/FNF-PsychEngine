@@ -14,7 +14,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@v2
         with:
-          haxe-version: 4.3.2
+          haxe-version: 4.2.5
 
       - name: Install Haxelib Packages
         run: |
@@ -29,10 +29,10 @@ jobs:
           haxelib install tjson 1.4.0 --never
           haxelib install SScript 5.2.0 --never
           haxelib install hxdiscord_rpc 1.2.4 --never
-          haxelib install flxanimate 3.0.2 --never
 
       - name: Install Git Libraries
         run: |
+          haxelib git flxanimate https://github.com/ShadowMario/flxanimate
           haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
           haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
           haxelib git hxdiscord https://github.com/MA3A/hxdiscord
