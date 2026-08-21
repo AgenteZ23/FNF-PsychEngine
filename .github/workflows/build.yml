@@ -40,6 +40,19 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib run lime setup -y
 
+      - name: Patch HScript for Haxe 4.2.5
+        run: |
+          python -c "
+          path = 'source/psychlua/HScript.hx'
+          with open(path, 'r', encoding='utf-8') as f:
+              lines = f.readlines()
+          print('Original:', lines[431])
+          lines[431] = lines[431].replace('?.', '.')
+          with open(path, 'w', encoding='utf-8') as f:
+              f.writelines(lines)
+          print('¡Parche aplicado con éxito!')
+          "
+
       - name: Build Game
         run: haxelib run lime build windows -release
 
