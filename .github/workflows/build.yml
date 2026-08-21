@@ -27,10 +27,10 @@ jobs:
           haxelib git hxdiscord https://github.com/MA3A/hxdiscord
           haxelib git hscript-ex https://github.com/ianhatcher/hscript-ex
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-          haxelib run lime setup
+          haxelib run lime setup -y
 
       - name: Build Game
-        run: lime build windows -release
+        run: haxelib run lime build windows -release
 
       - name: Upload Executable Artifact
         uses: actions/upload-artifact@v4
