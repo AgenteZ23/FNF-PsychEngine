@@ -1,0 +1,39 @@
+name: Build Windows Game
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Haxe
+        uses: haxe-actions/setup-haxe@v1
+        with:
+          haxe-version: 4.3.2
+
+      - name: Install Libraries
+        run: |
+          haxelib install lime 8.1.2
+          haxelib install openfl 9.3.3
+          haxelib install flixel 5.6.1
+          haxelib install flixel-addons 3.2.3
+          haxelib install flixel-tools 1.5.1
+          haxelib install hscript 2.5.0
+          haxelib git hxdiscord https://github.com/MA3A/hxdiscord
+          haxelib git hscript-ex https://github.com/ianhatcher/hscript-ex
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib run lime setup
+
+      - name: Build Game
+        run: lime build windows -release
+
+      - name: Upload Executable Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FNF-PsychEngine-Windows
+          path: export/release/windows/bin/
